@@ -29,15 +29,10 @@ import numpy as np
 import pandas as pd
 
 # ---- paths: look in ../data first, then next to this script -----------------
-SRC = Path(__file__).resolve().parent
-ROOT = SRC.parent
+BASE = Path(__file__).resolve().parent          # all files sit in this folder
 def find(name):
-    for p in (ROOT / "data" / name, SRC / name, ROOT / "output" / name):
-        if p.exists():
-            return p
-    return ROOT / "data" / name      # default location for the error message
-OUT = ROOT / "output"
-OUT.mkdir(exist_ok=True)
+    return BASE / name
+OUT = BASE
 
 ARTICLES_FILE = find("articles_with_topic_details.xlsx")
 ALARMS_FILE = find("alarms_clean.csv")

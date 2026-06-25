@@ -19,10 +19,8 @@ from math import erf, sqrt
 import numpy as np
 import pandas as pd
 
-SRC = Path(__file__).resolve().parent
-ROOT = SRC.parent
-BASE = ROOT / "data"
-OUT = ROOT / "output"; OUT.mkdir(exist_ok=True)
+BASE = Path(__file__).resolve().parent
+OUT = BASE
 TERMS = {"חרדה": "anxiety", "התקף חרדה": "panic_attack", "נדודי שינה": "insomnia",
          "פסיכולוג": "psychologist", "תרופת הרגעה": "sedative"}
 PRIMARY = "anxiety"

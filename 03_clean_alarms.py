@@ -28,14 +28,11 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-SRC = Path(__file__).resolve().parent
-ROOT = SRC.parent
-DATA = ROOT / "data"
-OUT = ROOT / "output"; OUT.mkdir(exist_ok=True)
-ALARMS_FILE = DATA / "alarms.xlsx"
-REFERENCE_FILE = DATA / "cities_reference.json"
-OUT_CLEAN = OUT / "alarms_clean.csv"
-OUT_COUNTS = OUT / "alarms_per_region_per_day.csv"
+BASE = Path(__file__).resolve().parent          # all files sit in this folder
+ALARMS_FILE = BASE / "alarms.xlsx"
+REFERENCE_FILE = BASE / "cities_reference.json"
+OUT_CLEAN = BASE / "alarms_clean.csv"
+OUT_COUNTS = BASE / "alarms_per_region_per_day.csv"
 
 # ---------------------------------------------------------------------------
 # Static translation tables

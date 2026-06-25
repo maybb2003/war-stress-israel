@@ -9,8 +9,7 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 
-ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "output"
+OUT = Path(__file__).resolve().parent
 
 # use whichever monthly table exists
 for name in ("topic_based_monthly.csv", "three_sources_monthly.csv"):

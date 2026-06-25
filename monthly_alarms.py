@@ -12,9 +12,7 @@ regions = "broad" coverage), tighten to regions_hit == 7, or relax further.
 from pathlib import Path
 import pandas as pd
 
-SRC = Path(__file__).resolve().parent
-ROOT = SRC.parent
-BASE = ROOT / "output"
+BASE = Path(__file__).resolve().parent
 c = pd.read_csv(BASE / "alarms_clean.csv", parse_dates=["time"])
 
 REGIONS = {"North", "Center", "South", "Yehuda & Shomron",
