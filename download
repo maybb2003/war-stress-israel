@@ -1,0 +1,19 @@
+# never commit data or large model artifacts - only code goes to git
+data/*
+!data/.gitkeep
+!data/cities_reference.json
+output/*
+!output/.gitkeep
+
+# topic-model byproducts
+bertopic_model/
+*.npy
+*.json
+!data/cities_reference.json
+clean_titles_unique_for_model.json
+
+# python noise
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/

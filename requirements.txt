@@ -1,0 +1,17 @@
+# core analysis (my code: 03, 04, 04b, monthly_alarms)
+pandas
+numpy
+matplotlib
+openpyxl
+
+# title translation (01_translate_titles.py)
+deep-translator
+tqdm
+
+# topic modeling (02_topic_modeling.py) - heavy, GPU helps but not required
+torch
+sentence-transformers
+bertopic
+umap-learn
+hdbscan
+scikit-learn
