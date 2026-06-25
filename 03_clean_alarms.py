@@ -29,7 +29,7 @@ import pandas as pd
 # Paths
 # ---------------------------------------------------------------------------
 BASE = Path(__file__).resolve().parent          # all files sit in this folder
-ALARMS_FILE = BASE / "alarms.xlsx"
+ALARMS_FILE = BASE / "rocket_alarms_timeline.csv"   # raw alarms input
 REFERENCE_FILE = BASE / "cities_reference.json"
 OUT_CLEAN = BASE / "alarms_clean.csv"
 OUT_COUNTS = BASE / "alarms_per_region_per_day.csv"
@@ -262,7 +262,7 @@ def resolve_region(city_record):
 # Main pipeline
 # ---------------------------------------------------------------------------
 def main():
-    df = pd.read_excel(ALARMS_FILE)
+    df = pd.read_csv(ALARMS_FILE)
     print(f"Loaded {len(df):,} rows, {df['cities'].nunique():,} unique cities.")
 
     # --- translate categorical columns -------------------------------------

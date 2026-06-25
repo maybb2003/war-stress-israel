@@ -56,7 +56,10 @@ def build():
     tr["month"] = pd.to_datetime(tr["Time"]).dt.to_period("M").astype(str)
     tr = tr.rename(columns=TERMS).set_index("month")[list(TERMS.values())]
 
-    a = pd.read_csv(BASE / "alarms_clean.csv", parse_dates=["time"])
+    alarms_file = BASE / "alarms_clean.csv"
+    if not alarms_file.exists():
+        alarms_file = BASE / "rocket_alarms_timeline.csv"   # raw fallback (only "time" is needed here)
+    a = pd.read_csv(alarms_file, parse_dates=["time"])
     a["month"] = a["time"].dt.to_period("M").astype(str)
     alarms = a.groupby("month").size().rename("alarms")
 

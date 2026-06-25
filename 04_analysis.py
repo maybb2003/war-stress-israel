@@ -35,7 +35,7 @@ def find(name):
 OUT = BASE
 
 ARTICLES_FILE = find("articles_with_topic_details.xlsx")
-ALARMS_FILE = find("alarms_clean.csv")
+ALARMS_FILE = find("alarms_clean.csv") if find("alarms_clean.csv").exists() else find("rocket_alarms_timeline.csv")
 TRENDS_FILE = find("trends_anxiety.csv")
 
 # column names inside the topic file (override here if yours differ)

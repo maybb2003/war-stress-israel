@@ -29,9 +29,10 @@ Data are monthly, Apr 2023 – Mar 2025 (~24 points).
 
 ## Data files (NOT in git — keep them locally, next to the scripts)
 Put these in the same folder as the code when you run it:
-- `alarms.xlsx` + `cities_reference.json`  → needed by `03`
-- `stress_media_merged_with_duplicates.xlsx` → needed by `02` / `04b`
-- `trends_anxiety.csv` → needed by `04` / `04b`
+- `rocket_alarms_timeline.csv` (raw alarms) + `cities_reference.json` → needed by `03`
+- `stress_media_merged_with_duplicates.xlsx` (news articles) → needed by `02` / `04b`
+- `trends_anxiety.csv` (Google Trends, 5 terms) → needed by `04` / `04b`
+- `icamh_addiction_prevalence.pdf` (ICAMH survey) → external reference only, not used in the analysis
 
 The `.gitignore` keeps data and generated files (`.csv`, `.xlsx`, …) out of git,
 so only code is committed. Every script reads and writes in its own folder.
@@ -39,11 +40,12 @@ so only code is committed. Every script reads and writes in its own folder.
 ## How to run
 ```bash
 pip install -r requirements.txt
-python 03_clean_alarms.py          # -> alarms_clean.csv
+python 03_clean_alarms.py          # rocket_alarms_timeline.csv -> alarms_clean.csv
 python 04b_analysis_keywords.py    # -> three_sources_monthly.csv  (quick path)
 python 05_plot.py                  # -> three_layer_monthly.png
 ```
 Full topic path: `01` → `02` → move its output next to the scripts → `04` → `05`.
+(`04`/`04b` use `alarms_clean.csv` if present, otherwise read `rocket_alarms_timeline.csv` directly.)
 
 ## Notes / decisions
 - The ICAMH survey (5 time points) was dropped from the analysis — too few points
