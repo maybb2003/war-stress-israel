@@ -36,5 +36,5 @@ ax.set_title("Three layers of wartime stress, weekly (Israel, 2023-2025)",
 ax.spines[["top", "right"]].set_visible(False)
 ax.legend(fontsize=9, frameon=False, loc="upper right")
 fig.tight_layout()
-fig.savefig(BASE / "three_layer_monthly.png", dpi=150)
-print("Wrote three_layer_monthly.png")
+fig.savefig(BASE / "three_layer_weekly.png", dpi=150)
+print("Wrote three_layer_weekly.png")

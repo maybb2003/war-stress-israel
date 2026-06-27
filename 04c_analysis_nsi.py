@@ -78,7 +78,9 @@ def main():
     af = BASE / "alarms_clean.csv"
     if not af.exists():
         af = BASE / "rocket_alarms_timeline.csv"
-    a = pd.read_csv(af, parse_dates=["time"])
+    a = pd.read_csv(af)
+    a["time"] = pd.to_datetime(a["time"], errors="coerce")
+    a = a.dropna(subset=["time"])
     a["week"] = to_week(a["time"])
     alarms = a.groupby("week").size().rename("alarms")
 

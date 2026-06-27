@@ -13,7 +13,9 @@ from pathlib import Path
 import pandas as pd
 
 BASE = Path(__file__).resolve().parent
-c = pd.read_csv(BASE / "alarms_clean.csv", parse_dates=["time"])
+c = pd.read_csv(BASE / "alarms_clean.csv")
+c["time"] = pd.to_datetime(c["time"], errors="coerce")
+c = c.dropna(subset=["time"])
 
 REGIONS = {"North", "Center", "South", "Yehuda & Shomron",
            "Jerusalem Area", "Haifa district", "Tel Aviv and Central area"}

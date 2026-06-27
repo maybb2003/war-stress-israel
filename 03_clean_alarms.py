@@ -263,6 +263,13 @@ def resolve_region(city_record):
 # ---------------------------------------------------------------------------
 def main():
     df = pd.read_csv(ALARMS_FILE)
+    # drop blank/garbage rows: anything without a valid time or city is unusable
+    df = df.dropna(how="all")
+    df["time"] = pd.to_datetime(df["time"], errors="coerce")
+    before = len(df)
+    df = df.dropna(subset=["time", "cities"]).reset_index(drop=True)
+    if before != len(df):
+        print(f"Dropped {before - len(df)} empty/invalid rows.")
     print(f"Loaded {len(df):,} rows, {df['cities'].nunique():,} unique cities.")
 
     # --- translate categorical columns -------------------------------------
@@ -291,7 +298,7 @@ def main():
     df["region"] = df["cities"].astype(str).map(region_map)
 
     # --- date column --------------------------------------------------------
-    df["date"] = pd.to_datetime(df["time"]).dt.date
+    df["date"] = df["time"].dt.date
 
     # --- assemble the cleaned table ----------------------------------------
     clean = df[[
