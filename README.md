@@ -17,7 +17,7 @@ Data are monthly, Apr 2023 – Mar 2025 (~24 points).
 | `01_translate_titles.py` | Translates news titles Hebrew → English (`title_en`). |
 | `02_topic_modeling.py` | Groups article titles into topics (BERTopic) → `articles_with_topic_details.xlsx`. |
 | `03_clean_alarms.py` | Cleans raw alarms, maps to regions → `alarms_clean.csv`. |
-| `04c_analysis_nsi.py` | **Main analysis.** Media coverage is measured by the NSI (sentiment × trauma-topic density); compares alarms vs coverage as predictors of anxiety. Alarms predict anxiety more strongly. |
+| `04c_analysis_nsi.py` | **Main analysis (weekly, ~84 wks).** Media coverage = NSI (sentiment × trauma-topic density). Compares alarms vs coverage as predictors of anxiety, including lead-lag. Alarms predict anxiety more strongly, strongest at a ~1-week lag. |
 | `05_plot.py` | Builds the three-layer figure from the monthly table. |
 | `monthly_alarms.py` | Helper: monthly nationwide alarm counts (+ "4+ regions" flag). |
 
@@ -29,7 +29,7 @@ Data are monthly, Apr 2023 – Mar 2025 (~24 points).
 Put these in the same folder as the code when you run it:
 - `rocket_alarms_timeline.csv` (raw alarms) + `cities_reference.json` → needed by `03`
 - `stress_media_merged_with_duplicates.xlsx` (news articles) → needed by `02`
-- `trends_anxiety.csv` (Google Trends, 5 terms) → needed by `04c`
+- `trends_anxiety_weekly.csv` (weekly Google Trends, 5 terms; stitched from short-range exports) → needed by `04c`
 - `icamh_addiction_prevalence.pdf` (ICAMH survey) → external reference only, not used in the analysis
 
 The `.gitignore` keeps data and generated files (`.csv`, `.xlsx`, …) out of git,
@@ -39,7 +39,7 @@ so only code is committed. Every script reads and writes in its own folder.
 ```bash
 pip install -r requirements.txt
 python 03_clean_alarms.py          # rocket_alarms_timeline.csv -> alarms_clean.csv
-python 04c_analysis_nsi.py         # -> nsi_analysis_monthly.csv
+python 04c_analysis_nsi.py         # -> weekly_nsi_analysis.csv
 python 05_plot.py                  # -> three_layer_monthly.png
 ```
 Full path: `01` → `02` → `03` → `04c` → `05`.

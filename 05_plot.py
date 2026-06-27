@@ -1,7 +1,7 @@
 """
 05_plot.py - three-layer figure from the NSI analysis table (04c).
 
-Reads nsi_analysis_monthly.csv (alarms, anxiety, NSI), z-scores the three series
+Reads weekly_nsi_analysis.csv (alarms, anxiety, NSI), z-scores the three series
 so they share one scale, and plots them over time.
 """
 from pathlib import Path
@@ -9,9 +9,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 BASE = Path(__file__).resolve().parent
-f = BASE / "nsi_analysis_monthly.csv"
+f = BASE / "weekly_nsi_analysis.csv"
 if not f.exists():
-    raise SystemExit("Run 04c_analysis_nsi.py first to create nsi_analysis_monthly.csv.")
+    raise SystemExit("Run 04c_analysis_nsi.py first to create weekly_nsi_analysis.csv.")
 
 d = pd.read_csv(f)
 month_col = d.columns[0]
@@ -31,7 +31,7 @@ if "2023-10" in list(d[month_col]):
 ax.set_xticks(list(x))
 ax.set_xticklabels(d[month_col], rotation=45, ha="right", fontsize=8)
 ax.set_ylabel("z-score (standardized)")
-ax.set_title("Three layers of wartime stress, monthly (Israel, 2023-2025)",
+ax.set_title("Three layers of wartime stress, weekly (Israel, 2023-2025)",
              fontsize=12, weight="bold")
 ax.spines[["top", "right"]].set_visible(False)
 ax.legend(fontsize=9, frameon=False, loc="upper right")
