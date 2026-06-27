@@ -17,21 +17,19 @@ Data are monthly, Apr 2023 – Mar 2025 (~24 points).
 | `01_translate_titles.py` | Translates news titles Hebrew → English (`title_en`). |
 | `02_topic_modeling.py` | Groups article titles into topics (BERTopic) → `articles_with_topic_details.xlsx`. |
 | `03_clean_alarms.py` | Cleans raw alarms, maps to regions → `alarms_clean.csv`. |
-| `04_analysis.py` | Main analysis: war-coverage from **topics** + alarms + Google Trends → correlations & regression. |
-| `04b_analysis_keywords.py` | Same analysis, simpler: war-coverage from Hebrew **keywords** (no topic model needed). |
+| `04c_analysis_nsi.py` | **Main analysis.** Media coverage is measured by the NSI (sentiment × trauma-topic density); compares alarms vs coverage as predictors of anxiety. Alarms predict anxiety more strongly. |
 | `05_plot.py` | Builds the three-layer figure from the monthly table. |
 | `monthly_alarms.py` | Helper: monthly nationwide alarm counts (+ "4+ regions" flag). |
 
-`04` is the stronger version but needs the topic model (`02`) first.
-`04b` is a self-contained baseline that runs immediately — start here.
+`04c` is the main analysis; it needs the topic model output from `02` first.
 
 ---
 
 ## Data files (NOT in git — keep them locally, next to the scripts)
 Put these in the same folder as the code when you run it:
 - `rocket_alarms_timeline.csv` (raw alarms) + `cities_reference.json` → needed by `03`
-- `stress_media_merged_with_duplicates.xlsx` (news articles) → needed by `02` / `04b`
-- `trends_anxiety.csv` (Google Trends, 5 terms) → needed by `04` / `04b`
+- `stress_media_merged_with_duplicates.xlsx` (news articles) → needed by `02`
+- `trends_anxiety.csv` (Google Trends, 5 terms) → needed by `04c`
 - `icamh_addiction_prevalence.pdf` (ICAMH survey) → external reference only, not used in the analysis
 
 The `.gitignore` keeps data and generated files (`.csv`, `.xlsx`, …) out of git,
@@ -41,11 +39,11 @@ so only code is committed. Every script reads and writes in its own folder.
 ```bash
 pip install -r requirements.txt
 python 03_clean_alarms.py          # rocket_alarms_timeline.csv -> alarms_clean.csv
-python 04b_analysis_keywords.py    # -> three_sources_monthly.csv  (quick path)
+python 04c_analysis_nsi.py         # -> nsi_analysis_monthly.csv
 python 05_plot.py                  # -> three_layer_monthly.png
 ```
-Full topic path: `01` → `02` → move its output next to the scripts → `04` → `05`.
-(`04`/`04b` use `alarms_clean.csv` if present, otherwise read `rocket_alarms_timeline.csv` directly.)
+Full path: `01` → `02` → `03` → `04c` → `05`.
+(`04c` uses `alarms_clean.csv` if present, otherwise reads `rocket_alarms_timeline.csv` directly.)
 
 ## Notes / decisions
 - The ICAMH survey (5 time points) was dropped from the analysis — too few points

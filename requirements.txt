@@ -15,3 +15,6 @@ bertopic
 umap-learn
 hdbscan
 scikit-learn
+
+# sentiment index (06_nsi_index.py)
+afinn
