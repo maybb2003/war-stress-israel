@@ -4,9 +4,21 @@ Analysis of wartime stress in Israel (2023–2025): do rocket alarms or media
 war-coverage better predict public anxiety (measured by Google searches)?
 
 **Main finding:** alarms predict anxiety searches more strongly than media
-coverage. Alarms ↔ anxiety move together (r≈0.47, p≈0.01); media coverage alone
-does not. In a regression with both predictors, alarms are the stronger one.
-Data are monthly, Apr 2023 – Mar 2025 (~24 points).
+coverage. At weekly resolution both are individually significant (alarms↔anxiety
+r≈0.26, p≈0.015; NSI↔anxiety r≈0.22, p≈0.04), but in a regression with both
+predictors alarms are the stronger one. The alarm→anxiety link is strongest at a
+~1-week lag (anxiety follows alarms). Data are weekly, Apr 2023 – Feb 2025
+(~84 weeks after merging all sources).
+
+---
+
+## Tech stack
+- **Python 3** — data processing and the main analysis (steps `01`–`04c`).
+  Key libraries: pandas, numpy, openpyxl, deep-translator, BERTopic, afinn.
+  Full list and install instructions in **`requirements.txt`**
+  (`pip install -r requirements.txt`).
+- **R** — plotting and regression (steps `05`–`06`).
+  Packages: ggplot2, dplyr (`install.packages(c("ggplot2","dplyr"))`).
 
 ---
 
@@ -16,9 +28,10 @@ Data are monthly, Apr 2023 – Mar 2025 (~24 points).
 |------|--------------|
 | `01_translate_titles.py` | Translates news titles Hebrew → English (`title_en`). |
 | `02_topic_modeling.py` | Groups article titles into topics (BERTopic) → `articles_with_topic_details.xlsx`. |
-| `03_clean_alarms.py` | Cleans raw alarms, maps to regions → `alarms_clean.csv`. |
+| `03_clean_alarms.py` | Cleans raw alarms and maps each town to a region (needs `cities_reference.json`) → `alarms_clean.csv`. |
 | `04c_analysis_nsi.py` | **Main analysis (weekly, ~84 wks).** Media coverage = NSI (sentiment × trauma-topic density). Compares alarms vs coverage as predictors of anxiety, including lead-lag. Alarms predict anxiety more strongly, strongest at a ~1-week lag. |
-| `05_plot.py` | Builds the three-layer figure from the monthly table. |
+| `05_plot.R` | (R) Three-layer figure from `weekly_nsi_analysis.csv` → `three_layer_dark_style.png`. |
+| `06_regression_analysis.R` | (R) Regression `anxiety ~ alarms + NSI`: writes coefficient / CI / model-fit CSVs and two diagnostic plots (residuals-vs-fitted, Q-Q). |
 | `monthly_alarms.py` | Helper: monthly nationwide alarm counts (+ "4+ regions" flag). |
 
 `04c` is the main analysis; it needs the topic model output from `02` first.
@@ -37,22 +50,28 @@ so only code is committed. Every script reads and writes in its own folder.
 
 ## How to run
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt          # Python steps (01-04c)
+# R steps (05, 06) need R with: install.packages(c("ggplot2","dplyr"))
+
+python 01_translate_titles.py      # Hebrew titles -> English (title_en)
+python 02_topic_modeling.py        # -> articles_with_topic_details1.xlsx  (heavy / slow)
 python 03_clean_alarms.py          # rocket_alarms_timeline.csv -> alarms_clean.csv
 python 04c_analysis_nsi.py         # -> weekly_nsi_analysis.csv
-python 05_plot.py                  # -> three_layer_monthly.png
+Rscript 05_plot.R                  # -> three_layer_dark_style.png
+Rscript 06_regression_analysis.R   # -> regression_*_appendix.csv + 2 diagnostic plots
 ```
-Full path: `01` → `02` → `03` → `04c` → `05`.
+Steps 01–02 are the heavy one-time setup that produces the topic file; once you
+have it, day-to-day work is just 03 → 04c → 05 → 06.
 (`04c` uses `alarms_clean.csv` if present, otherwise reads `rocket_alarms_timeline.csv` directly.)
 
 ## Notes / decisions
+- Resolution is weekly (~84 weeks). The lead-lag check shows anxiety follows
+  alarms by about one week.
 - The ICAMH survey (5 time points) was dropped from the analysis — too few points
-  for monthly resolution. Worth one sentence in the writeup, not as a variable.
+  for our weekly resolution. Worth one sentence in the writeup, not as a variable.
 - Google Trends is validated against alarms (it rises with the threat), not a survey.
 - "anxiety" (חרדה) is the primary search term: the only one that rises with alarms
   in the expected direction. We did not switch to a term that merely produced a
   significant fit (that would be an n=4 false positive).
-
-## Possible next step
-Re-download Google Trends over a shorter range so it returns **weekly** data
-(~100 points instead of 24) for more statistical power.
+- `monthly_alarms.py` is a separate descriptive helper and is not part of the
+  weekly analysis chain.
