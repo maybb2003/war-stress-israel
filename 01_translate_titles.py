@@ -6,11 +6,11 @@ from tqdm import tqdm
 
 # --- הגדרות קבצים ---
 # קובץ הקלט הוא הקובץ שנוצר מההרצה הקודמת (המכיל את השורות המשוכפלות)
-input_file = "stress_media_merged_with_duplicates_final2.xlsx"
+input_file = "stress_media_merged_with_duplicates.xlsx"   # raw course file
 # קובץ הפלט החדש והמתוקן שייווצר בסיום
-output_file = "stress_media_merged_with_duplicates_final.xlsx"
+output_file = "stress_media_translated.xlsx"             # adds title_en
 
-column_to_translate = 5  # מיקום העמודה בעברית (עמודה שישית, אינדקס 5)
+title_column = "title"  # שם עמודת הכותרת בעברית (לפי שם, לא לפי מיקום)
 target_column_name = "title_en"  # שם העמודה של התרגום לאנגלית
 
 
@@ -35,7 +35,7 @@ def main():
 
     # 🎯 פילטר חכם: מוצאים רק שורות שבהן האנגלית שווה לעברית, או שהיא ריקה/NaN/שגיאה
     def needs_translation(row):
-        val_he = str(row.iloc[column_to_translate]).strip()
+        val_he = str(row[title_column]).strip()
         val_en = str(row[target_column_name]).strip()
 
         # אם התא ריק או מכיל שגיאה
@@ -59,7 +59,7 @@ def main():
 
     # ריצה על השורות הבעייתיות בלבד
     for idx, row in tqdm(rows_to_translate.iterrows(), total=total_missing, desc="מתקן שורות בעברית"):
-        text_he = row.iloc[column_to_translate]
+        text_he = row[title_column]
 
         if pd.isna(text_he) or str(text_he).strip() == "":
             df.at[idx, target_column_name] = ""

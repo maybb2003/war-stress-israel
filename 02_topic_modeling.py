@@ -20,7 +20,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 # ============================================================
 
 # שימי כאן את שם הקובץ שלך
-INPUT_FILE = "stress_media_merged_with_duplicates_final.xlsx"
+INPUT_FILE = "stress_media_translated.xlsx"
 
 TITLE_COLUMN = "title_en"
 CLEAN_TITLE_COLUMN = "clean_title_en"
@@ -586,9 +586,9 @@ def main():
         how="left"
     )
 
-    final_df.to_excel("articles_with_topic_details.xlsx", index=False)
+    final_df.to_excel("articles_with_topic_details1.xlsx", index=False)
 
-    print("Saved final merged file: articles_with_topic_details.xlsx")
+    print("Saved final merged file: articles_with_topic_details1.xlsx")
 
     print("\nProcess completed successfully!")
 

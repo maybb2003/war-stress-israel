@@ -26,8 +26,8 @@ predictors alarms are the stronger one. The alarm→anxiety link is strongest at
 
 | File | What it does |
 |------|--------------|
-| `01_translate_titles.py` | Translates news titles Hebrew → English (`title_en`). |
-| `02_topic_modeling.py` | Groups article titles into topics (BERTopic) → `articles_with_topic_details.xlsx`. |
+| `01_translate_titles.py` | Reads the raw news file (`stress_media_merged_with_duplicates.xlsx`) and translates the `title` column Hebrew → English (`title_en`) → `stress_media_translated.xlsx`. |
+| `02_topic_modeling.py` | Reads `stress_media_translated.xlsx`, **cleans** the titles (lowercase, strip URLs / digits / punctuation / source-suffixes → `clean_title_en`), then groups them into topics (BERTopic) → `articles_with_topic_details1.xlsx`. |
 | `03_clean_alarms.py` | Cleans raw alarms and maps each town to a region (needs `cities_reference.json`) → `alarms_clean.csv`. |
 | `04c_analysis_nsi.py` | **Main analysis (weekly, ~84 wks).** Media coverage = NSI (sentiment × trauma-topic density). Compares alarms vs coverage as predictors of anxiety, including lead-lag. Alarms predict anxiety more strongly, strongest at a ~1-week lag. |
 | `05_plot.R` | (R) Three-layer figure from `weekly_nsi_analysis.csv` → `three_layer_dark_style.png`. |
@@ -41,7 +41,7 @@ predictors alarms are the stronger one. The alarm→anxiety link is strongest at
 ## Data files (NOT in git — keep them locally, next to the scripts)
 Put these in the same folder as the code when you run it:
 - `rocket_alarms_timeline.csv` (raw alarms) + `cities_reference.json` → needed by `03`
-- `stress_media_merged_with_duplicates.xlsx` (news articles) → needed by `02`
+- `stress_media_merged_with_duplicates.xlsx` (raw news articles) → needed by `01`
 - `trends_anxiety_weekly.csv` (weekly Google Trends, 5 terms; stitched from short-range exports) → needed by `04c`
 - `icamh_addiction_prevalence.pdf` (ICAMH survey) → external reference only, not used in the analysis
 
@@ -53,8 +53,8 @@ so only code is committed. Every script reads and writes in its own folder.
 pip install -r requirements.txt          # Python steps (01-04c)
 # R steps (05, 06) need R with: install.packages(c("ggplot2","dplyr"))
 
-python 01_translate_titles.py      # Hebrew titles -> English (title_en)
-python 02_topic_modeling.py        # -> articles_with_topic_details1.xlsx  (heavy / slow)
+python 01_translate_titles.py      # stress_media_merged_with_duplicates.xlsx -> stress_media_translated.xlsx
+python 02_topic_modeling.py        # stress_media_translated.xlsx -> articles_with_topic_details1.xlsx  (heavy / slow)
 python 03_clean_alarms.py          # rocket_alarms_timeline.csv -> alarms_clean.csv
 python 04c_analysis_nsi.py         # -> weekly_nsi_analysis.csv
 Rscript 05_plot.R                  # -> three_layer_dark_style.png
