@@ -31,6 +31,9 @@ ARTICLES = BASE / "articles_with_topic_details1.xlsx"
 TRENDS_WEEKLY = BASE / "trends_anxiety_weekly.csv"
 TRAUMA_PREFIXES = ["3_", "6_", "8_", "21_", "22_", "24_", "36_"]
 MIN_ARTICLES_PER_WEEK = 30      # drop sparse partial weeks
+MIN_REGIONS = 4                 # count alarms only on days hitting >=4 of 7 regions
+REAL_REGIONS = ["North", "Center", "South", "Yehuda & Shomron",
+                "Jerusalem Area", "Haifa district", "Tel Aviv and Central area"]
 
 
 def to_week(s):
@@ -82,13 +85,28 @@ def main():
     a["time"] = pd.to_datetime(a["time"], errors="coerce")
     a = a.dropna(subset=["time"])
     a["week"] = to_week(a["time"])
+
+    # Count only WIDESPREAD threat: alarms on days when at least MIN_REGIONS of the
+    # 7 Home Front Command regions were under alert (so a pinpoint local alarm is
+    # not treated the same as a countrywide threat). Needs the 'region' column
+    # produced by 03; if it is missing (raw fallback) we count all alarms.
+    if "region" in a.columns:
+        a["day"] = a["time"].dt.date
+        regions_per_day = a[a["region"].isin(REAL_REGIONS)].groupby("day")["region"].nunique()
+        a["day_regions"] = a["day"].map(regions_per_day).fillna(0)
+        a = a[a["day_regions"] >= MIN_REGIONS]
     alarms = a.groupby("week").size().rename("alarms")
 
     tr = pd.read_csv(TRENDS_WEEKLY)
     tr["week"] = to_week(tr["Time"])
     anx = tr.set_index("week")["חרדה"].rename("anxiety")
 
-    d = pd.concat([alarms, anx, nsi], axis=1).dropna().sort_index()
+    # weeks that have both media (NSI) and anxiety data define the analysis window;
+    # a week with no widespread-threat alarms is a valid LOW-threat week (0), not a
+    # missing one, so we reindex alarms onto that window and fill missing weeks with 0.
+    d = pd.concat([anx, nsi], axis=1).dropna().sort_index()
+    d["alarms"] = alarms.reindex(d.index).fillna(0)
+    d = d[["alarms", "anxiety", "NSI"]]
     d.to_csv(BASE / "weekly_nsi_analysis.csv", encoding="utf-8-sig")
     A, M, X = "alarms", "NSI", "anxiety"
     print(f"weekly rows: {len(d)}  ({d.index.min().date()} .. {d.index.max().date()})\n")
