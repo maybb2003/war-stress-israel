@@ -44,7 +44,6 @@ Put these in the same folder as the code when you run it:
 - `rocket_alarms_timeline.csv` (raw alarms) + `cities_reference.json` → needed by `03`
 - `stress_media_merged_with_duplicates.xlsx` (raw news articles) → needed by `01`
 - `trends_anxiety_weekly.csv` (weekly Google Trends, 5 terms; stitched from short-range exports) → needed by `04c`
-- `icamh_addiction_prevalence.pdf` (ICAMH survey) → external reference only, not used in the analysis
 
 The `.gitignore` keeps data and generated files (`.csv`, `.xlsx`, …) out of git,
 so only code is committed. Every script reads and writes in its own folder.
@@ -70,9 +69,7 @@ have it, day-to-day work is just 03 → 04c → 05 → 06.
   by weekly breadth (regions under alert that week / 7), so countrywide threat
   weighs more than local. Lead-lag is checked for both predictors: anxiety follows
   alarms (peaks ~1 week later) but tracks the NSI within the same week.
-- The ICAMH survey (5 time points) was dropped from the analysis — too few points
-  for our weekly resolution. Worth one sentence in the writeup, not as a variable.
-- Google Trends is validated against alarms (it rises with the threat), not a survey.
+- Google Trends is validated against alarms: it rises when the physical threat rises.
 - "anxiety" (חרדה) is the primary search term: the only one that rises with alarms
   in the expected direction. We did not switch to a term that merely produced a
   significant fit (that would be an n=4 false positive).
